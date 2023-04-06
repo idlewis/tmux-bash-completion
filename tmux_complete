@@ -1,0 +1,21 @@
+#!/bin/bash
+
+_tmx_complete()
+{
+  prev=${COMP_WORDS[-2]}
+  if [ "$prev" != "-t" ]; then
+    # Only complete session names
+    return
+  fi
+  if [ "${COMP_WORDS[-1]}" == "" ]; then
+    # Nothing typed yet
+    comps=($(tmux ls -F \#S))
+    COMPREPLY+=("${comps[@]}")
+    return
+  fi
+
+  #COMPREPLY=($(compgen -W \' "${comps[@]}" \' -- "${COMP_WORDS[-1]}"))
+  COMPREPLY=($(compgen -W "$(tmux ls -F \#S)" "${COMP_WORDS[-1]}"))
+}
+
+complete -F _tmx_complete tmux
